@@ -1,0 +1,15 @@
+List de exercitii de recapitulare:   
+•	repo url: https://github.com/Iulik1989/lesson25jsonplaceholder url: https://jsonplaceholder.typicode.com/
+•   guide: https://jsonplaceholder.typicode.com/guide/
+
+•   creati cate un exemplu de GET, POST, PUT, DELETE request.
+•   folositiva de url pentru a primi posturi : https://jsonplaceholder.typicode.com/posts
+veti primi 100 de postari, fiecare postare are un parametru de userId de la 1 - 10 (fiecare utilizator ar avea 10 postari)
+•   creati un obiect cu fiecare utilizator ( atribuiti cate un nume pentru fiecareId)
+    ex: const obj = {
+             '1': 'Alex'
+            }
+    adresarea catre valoare : obj['1']
+•   apoi creati o lista(ordonata sau neordonata, la alegerea voastra) pentru fiecare utilizator si atribuitii titlurile postarilor
+
+
