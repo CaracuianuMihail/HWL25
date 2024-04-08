@@ -48,47 +48,55 @@ fetch("https://jsonplaceholder.typicode.com/users/1", {
 // atribuitii titlurile postarilor //
 
 document.addEventListener("DOMContentLoaded", function () {
-  const users = {
-    1: "Alex",
-    2: "Maria",
-    3: "Andrei",
-    4: "Elena",
-    5: "Ion",
-    6: "Ana",
-    7: "Vlad",
-    8: "Diana",
-    9: "George",
-    10: "Laura",
-  };
+  const usersEndpoint = "https://jsonplaceholder.typicode.com/users";
+  const postsEndpoint = "https://jsonplaceholder.typicode.com/posts";
 
-  const postsByUser = {
-    1: ["Titles Post 1", "Titles Post 2", "Titles Post 3"],
-    2: ["Titles Post 4", "Titles Post 5"],
-    3: ["Titles Post 6", "Titles Post 7", "Titles Post 8"],
-    4: ["Titles Post 9"],
-    5: ["Titles Post 10", "Titles Post 11", "Titles Post 12"],
-    6: ["Titles Post 13", "Titles Post 14"],
-    7: ["Titles Post 15", "Titles Post 16", "Titles Post 17"],
-    8: ["Titles Post 18"],
-    9: ["Titles Post 19", "Titles Post 20"],
-    10: ["Titles Post 21"],
-  };
-
-  const postsList = document.getElementById("posts-list");
-  for (let userId in users) {
-    const userName = users[userId];
-    const userPosts = postsByUser[userId];
-
-    const userItem = document.createElement("li");
-    userItem.textContent = `${userName}'s Postări:`;
-    const userPostList = document.createElement("ol");
-
-    userPosts.forEach((postTitle) => {
-      const postItem = document.createElement("li");
-      postItem.textContent = postTitle;
-      userPostList.appendChild(postItem);
-    });
-    userItem.appendChild(userPostList);
-    postsList.appendChild(userItem);
+  function fetchData(url) {
+    return fetch(url)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .catch(error => {
+        console.error('There was a problem with the fetch operation:', error);
+      });
   }
+
+  Promise.all([fetchData(usersEndpoint), fetchData(postsEndpoint)])
+    .then(([usersData, postsData]) => {
+      const users = {};
+      const postsByUser = {};
+
+      usersData.forEach(user => {
+        users[user.id] = user.name;
+      });
+
+      postsData.forEach(post => {
+        if (!postsByUser[post.userId]) {
+          postsByUser[post.userId] = [];
+        }
+        postsByUser[post.userId].push(post.title);
+      });
+
+      const postsList = document.getElementById("posts-wrapper");
+
+      for (let userId in users) {
+        const userName = users[userId];
+        const userPosts = postsByUser[userId] || [];
+
+        const userItem = document.createElement("div");
+        userItem.textContent = `${userName}'s Postări:`;
+        const userPostList = document.createElement("ol");
+
+        userPosts.forEach((postTitle) => {
+          const postItem = document.createElement("li");
+          postItem.textContent = postTitle;
+          userPostList.appendChild(postItem);
+        });
+        userItem.appendChild(userPostList);
+        postsList.appendChild(userItem);
+      }
+    });
 });
